@@ -1,0 +1,7 @@
+{
+  "name": "Color Replace",
+  "id": "797668496099411237",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/index.html"
+}

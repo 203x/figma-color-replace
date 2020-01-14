@@ -1,0 +1,53 @@
+@charset 'utf-8';
+
+@import 'normalize';
+
+* {
+  box-sizing: border-box;
+}
+.label {
+  font-family: sans-serif;
+}
+.hide {
+  display: none;
+}
+ul,
+ol,
+dl,
+dt,
+dd {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+.inner {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.panel {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.no-select {
+  cursor: default;
+  user-select: none;
+}
+
+input {
+  border: none;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+input:focus {
+  outline: none;
+}
+
+#app {
+  font: normal 400 11px/16px Inter, Roboto, sans-serif;
+  font-weight: 400;
+  color: #333;
+}

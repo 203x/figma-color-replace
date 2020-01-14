@@ -1,0 +1,29 @@
+{
+  "name": "color-replace",
+  "version": "1.0.0",
+  "description": "Quickly replace color in Frame.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "gulp watch",
+    "build": "gulp build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.0.2",
+    "inline-source": "^7.1.0",
+    "node-sass": "^4.13.0",
+    "rollup": "^1.29.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-svelte": "^5.1.1",
+    "rollup-plugin-typescript": "^1.0.1",
+    "svelte": "^3.16.7",
+    "svelte-preprocess-sass": "^0.2.0",
+    "tslib": "^1.10.0",
+    "typescript": "^3.7.4"
+  },
+  "dependencies": {}
+}
