@@ -1,28 +1,28 @@
 <script>
-  import { onMount, createEventDispatcher } from 'svelte';
-  export let color;
+  import { onMount, createEventDispatcher } from 'svelte'
+  export let color
 
   let val = ''
   let self
 
-	onMount( () => {
+  onMount(() => {
     reset()
   })
 
-  const reset = ()=>{
+  const reset = () => {
     val = color
   }
-	// afterUpdate( () => {
+  // afterUpdate( () => {
   //   hex_to = color
   // })
-	// afterUpdate(async () => {
+  // afterUpdate(async () => {
   //   console.log('the component is about to update');
   //   hex_to = color
   //   await tick()
-	// 	console.log('the component just updated');
-	// })
+  // 	console.log('the component just updated');
+  // })
 
-  const handleChange = ()=> {
+  const handleChange = () => {
     const format = (str, char) => {
       return str.replace(/(\d)/g, (m, n) => char.charAt(parseInt(n)))
     }
@@ -48,19 +48,19 @@
           update(format('012345', hexm[0]))
           break
       }
-    }else{
+    } else {
       reset()
     }
   }
 
   const dispatch = createEventDispatcher()
 
-  const update = (new_hex)=> {
+  const update = new_hex => {
     val = new_hex
     if (color !== new_hex) {
       color = new_hex
-      dispatch("update", {
-        hex: new_hex
+      dispatch('update', {
+        hex: new_hex,
       })
     }
   }
@@ -75,9 +75,12 @@
 
 <input
   class="inner"
-  maxlength='6' minlength='3'
+  maxlength="6"
+  minlength="3"
   type="text"
   bind:value={val}
   bind:this={self}
   on:change={handleChange}
-  on:focus={()=>{self.select()}}>
+  on:focus={() => {
+    self.select()
+  }} />

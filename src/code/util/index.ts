@@ -19,7 +19,7 @@ function isInstanceNode(node: SceneNode) {
 
 function getAllNode(): SceneNode[] {
   let nodes = []
-  figma.currentPage.selection.forEach(node=>{
+  figma.currentPage.selection.forEach(node => {
     nodes.push(node)
     if ('findAll' in node) {
       nodes = [...nodes, ...node.findAll()]

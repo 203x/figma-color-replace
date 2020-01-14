@@ -1,13 +1,12 @@
 <script>
-  export let checked = false;
+  export let checked = false
 
   $: toggle = checked ? 'toggleOn' : 'toggleOff'
 
-  const toggleSwitch = ()=> {
-		checked = !checked
-	}
+  const toggleSwitch = () => {
+    checked = !checked
+  }
 </script>
-
 
 <style>
   .switch {
@@ -27,7 +26,7 @@
     border-radius: 100%;
     background: #fff;
     box-sizing: border-box;
-    transition: all .1s ease-out;
+    transition: all 0.1s ease-out;
   }
   .toggleOff .toggle {
     left: -1px;
@@ -40,7 +39,6 @@
   }
 </style>
 
-
 <div on:click={toggleSwitch} class="switch {toggle}">
-  <div class="toggle"></div>
+  <div class="toggle" />
 </div>

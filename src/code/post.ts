@@ -1,4 +1,4 @@
-import {isSolidPaint, isShadowEffect, getAllNode} from './util/index'
+import { isSolidPaint, isShadowEffect, getAllNode } from './util/index'
 
 type NodeCollect = {
   id: string
@@ -25,7 +25,7 @@ function find_type_color(node: SceneNode, type: ColorType): Array<NodeColor> {
           visible: paint.visible
         }
       })
-    }else if (type === 'effects') {
+    } else if (type === 'effects') {
       return node[type].filter(isShadowEffect).map(effect => {
         return {
           color: {
@@ -62,7 +62,7 @@ function collectColors(node: SceneNode): NodeCollect {
 }
 
 function postBorders() {
-  const data = getAllNode().map(node=>{
+  const data = getAllNode().map(node => {
     return collectColors(node)
   })
 

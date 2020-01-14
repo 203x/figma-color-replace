@@ -1,26 +1,26 @@
 <script>
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte'
 
-  export let opacity;
+  export let opacity
 
   let val = 100
   let self
-	onMount( () => {
+  onMount(() => {
     reset()
   })
 
-  const reset = ()=>{
+  const reset = () => {
     val = opacity.toFixed(4) * 100 + '%'
   }
-  
-  const handleChange = ()=> {
+
+  const handleChange = () => {
     let num = parseFloat(val)
-    if (Number.isNaN(num)){
+    if (Number.isNaN(num)) {
       reset()
-    }else {
+    } else {
       if (num > 100) {
         num = 100
-      }else if(num <= 0) {
+      } else if (num <= 0) {
         num = 0
       }
       update(num, num + '%')
@@ -29,28 +29,30 @@
 
   const dispatch = createEventDispatcher()
 
-  const update = (real, new_opa)=> {
+  const update = (real, new_opa) => {
     opacity = real
     val = new_opa
-    dispatch("update", {
-      opacity: real
+    dispatch('update', {
+      opacity: real,
     })
   }
 </script>
 
 <style>
-input {
-  width: 5em;
-  padding-left: 5px;
-}
+  input {
+    width: 5em;
+    padding-left: 5px;
+  }
 </style>
 
 <input
-  maxlength='6'
-  minlength='2'
+  maxlength="6"
+  minlength="2"
   type="text"
   disabled
   bind:value={val}
   bind:this={self}
   on:change={handleChange}
-  on:focus={()=>{self.select()}}>
+  on:focus={() => {
+    self.select()
+  }} />

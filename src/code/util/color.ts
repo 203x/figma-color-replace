@@ -15,8 +15,8 @@ function rgb2hex(rgb: RGB) {
 }
 
 function rgba2hex(rgba: RGBA) {
-  const {r, g, b, a} = rgba
-  return rgb2hex({r, g, b}) + float2Hex(a)
+  const { r, g, b, a } = rgba
+  return rgb2hex({ r, g, b }) + float2Hex(a)
 }
 
 function hex2rgb(hex: string): RGB {
@@ -43,4 +43,5 @@ export {
   rgba2hex,
   hex2rgb,
   hex2rgba,
+  float2Hex
 }
