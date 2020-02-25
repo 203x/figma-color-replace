@@ -15,14 +15,14 @@ type NodeColor = {
 
 type ColorType = 'fills' | 'strokes' | 'effects'
 
-function find_type_color(node: SceneNode, type: ColorType): Array<NodeColor> {
+function findTypeColor(node: SceneNode, type: ColorType): Array<NodeColor> {
   if (type in node && node[type] instanceof Array) {
     if (type === 'fills' || type === 'strokes') {
       return node[type].filter(isSolidPaint).map(paint => {
         return {
           color: paint.color,
           opacity: paint.opacity,
-          visible: paint.visible
+          visible: paint.visible,
         }
       })
     } else if (type === 'effects') {
@@ -31,10 +31,10 @@ function find_type_color(node: SceneNode, type: ColorType): Array<NodeColor> {
           color: {
             r: effect.color.r,
             g: effect.color.g,
-            b: effect.color.b
+            b: effect.color.b,
           },
           opacity: effect.color.a,
-          visible: effect.visible
+          visible: effect.visible,
         }
       })
     }
@@ -44,32 +44,32 @@ function find_type_color(node: SceneNode, type: ColorType): Array<NodeColor> {
 
 function collectColors(node: SceneNode): NodeCollect {
   const collect = {
-    id: node.id
+    id: node.id,
   }
-  const fills = find_type_color(node, 'fills')
+  const fills = findTypeColor(node, 'fills')
   if (fills) {
     collect['fills'] = fills
   }
-  const strokes = find_type_color(node, 'strokes')
+  const strokes = findTypeColor(node, 'strokes')
   if (strokes) {
     collect['strokes'] = strokes
   }
-  const effects = find_type_color(node, 'effects')
+  const effects = findTypeColor(node, 'effects')
   if (effects) {
     collect['effects'] = effects
   }
   return collect
 }
 
-function postBorders() {
+function postBorders(): void {
   const data = getAllNode().map(node => {
     return collectColors(node)
   })
 
   figma.ui.postMessage({
     type: 'node-collect',
-    data: data
+    data: data,
   })
 }
 
-export default postBorders;
+export default postBorders

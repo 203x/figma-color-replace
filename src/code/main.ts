@@ -4,7 +4,7 @@ import replace from './action'
 interface BaseMsg {
   type: 'replace'
   config?: {
-    type: boolean,
+    type: boolean
     opacity: boolean
   }
   find: {
@@ -35,21 +35,19 @@ interface BaseMsg {
 //   }
 // })
 
-
 figma.showUI(__html__, {
   width: 180,
-  height: 400
+  height: 400,
 })
 
-figma.on("selectionchange", () => {
+figma.on('selectionchange', () => {
   postBorders()
 })
 
 postBorders()
 
-figma.ui.onmessage = (msg: BaseMsg) => {
+figma.ui.onmessage = (msg: BaseMsg): void => {
   if (msg.type === 'replace') {
-    // console.log(msg)
     replace(msg)
   }
 }

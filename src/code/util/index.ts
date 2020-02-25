@@ -1,19 +1,14 @@
-import {
-  rgb2hex,
-  rgba2hex,
-  hex2rgb,
-  hex2rgba,
-} from './color'
+import { rgb2hex, rgba2hex, hex2rgb, hex2rgba } from './color'
 
-function isSolidPaint(paint: Paint) {
+function isSolidPaint(paint: Paint): boolean {
   return paint.type === 'SOLID'
 }
 
-function isShadowEffect(effect: Effect) {
-  return effect.type === "DROP_SHADOW" || effect.type === "INNER_SHADOW"
+function isShadowEffect(effect: Effect): boolean {
+  return effect.type === 'DROP_SHADOW' || effect.type === 'INNER_SHADOW'
 }
 
-function isInstanceNode(node: SceneNode) {
+function isInstanceNode(node: SceneNode): boolean {
   return node.type === 'INSTANCE'
 }
 
@@ -28,12 +23,16 @@ function getAllNode(): SceneNode[] {
   return nodes
 }
 
-function clone(val) {
+function clone(val: any): any {
   const type = typeof val
   if (val === null) {
     return null
-  } else if (type === 'undefined' || type === 'number' ||
-    type === 'string' || type === 'boolean') {
+  } else if (
+    type === 'undefined' ||
+    type === 'number' ||
+    type === 'string' ||
+    type === 'boolean'
+  ) {
     return val
   } else if (type === 'object') {
     if (val instanceof Array) {
@@ -59,5 +58,5 @@ export {
   rgba2hex,
   hex2rgb,
   hex2rgba,
-  clone
+  clone,
 }

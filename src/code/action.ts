@@ -1,12 +1,20 @@
-import { isSolidPaint, isShadowEffect, getAllNode, rgb2hex, rgba2hex, hex2rgb, clone } from './util/index'
+import {
+  isSolidPaint,
+  isShadowEffect,
+  getAllNode,
+  rgb2hex,
+  rgba2hex,
+  hex2rgb,
+  clone,
+} from './util/index'
 import postBorders from './post'
 
 type ColorType = 'fills' | 'strokes' | 'effects'
 
 interface BaseMsg {
-  type: 'replace';
+  type: 'replace'
   config?: {
-    type: boolean,
+    type: boolean
     opacity: boolean
   }
   find: {
@@ -20,7 +28,8 @@ interface BaseMsg {
 
 // type a = SolidPaint | ShadowEffect // Array<NodeColor>
 
-function find_index(arr: Array<any>, isTrue: (any) => boolean): Array<number> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function findIndex(arr: any[], isTrue: (any) => boolean): number[] {
   return arr.reduce((find: number[], val, idx: number) => {
     if (isTrue(val)) {
       return [...find, idx]
@@ -30,35 +39,40 @@ function find_index(arr: Array<any>, isTrue: (any) => boolean): Array<number> {
   }, [])
 }
 
-function replace_color(node: SceneNode, type: ColorType, hex: string, tohex: string) {
+function replaceColor(
+  node: SceneNode,
+  type: ColorType,
+  hex: string,
+  tohex: string
+): void {
   if (type in node && node[type] instanceof Array) {
     let findindex: number[] = []
     if (type === 'fills' || type === 'strokes') {
-      findindex = find_index(node[type], paint => {
+      findindex = findIndex(node[type], paint => {
         if (isSolidPaint(paint)) {
-          let paint_hex = ''
+          let paintHex = ''
           if (hex.length === 8) {
-            paint_hex = rgba2hex({
+            paintHex = rgba2hex({
               ...paint.color,
-              a: paint.opacity
+              a: paint.opacity,
             })
           } else if (hex.length === 6) {
-            paint_hex = rgb2hex(paint.color)
+            paintHex = rgb2hex(paint.color)
           }
-          return paint_hex === hex
+          return paintHex === hex
         }
         return false
       })
     } else if (type === 'effects') {
-      findindex = find_index(node[type], effect => {
+      findindex = findIndex(node[type], effect => {
         if (isShadowEffect(effect)) {
-          let paint_hex = ''
+          let paintHex = ''
           if (hex.length === 8) {
-            paint_hex = rgba2hex(effect.color)
+            paintHex = rgba2hex(effect.color)
           } else if (hex.length === 6) {
-            paint_hex = rgb2hex(effect.color)
+            paintHex = rgb2hex(effect.color)
           }
-          return paint_hex === hex
+          return paintHex === hex
         }
         return false
       })
@@ -66,7 +80,7 @@ function replace_color(node: SceneNode, type: ColorType, hex: string, tohex: str
     if (findindex.length > 0) {
       const temp = clone(node[type])
       const { r, g, b } = hex2rgb(tohex)
-      findindex.forEach((index) => {
+      findindex.forEach(index => {
         temp[index].color.r = r
         temp[index].color.g = g
         temp[index].color.b = b
@@ -77,19 +91,23 @@ function replace_color(node: SceneNode, type: ColorType, hex: string, tohex: str
   }
 }
 
-function finded(hex: string, tohex: string, type: BaseMsg['find']['type']) {
+function finded(
+  hex: string,
+  tohex: string,
+  type: BaseMsg['find']['type']
+): void {
   getAllNode().forEach(node => {
     if (type === 'all') {
-      replace_color(node, 'fills', hex, tohex)
-      replace_color(node, 'strokes', hex, tohex)
-      replace_color(node, 'effects', hex, tohex)
+      replaceColor(node, 'fills', hex, tohex)
+      replaceColor(node, 'strokes', hex, tohex)
+      replaceColor(node, 'effects', hex, tohex)
     } else {
-      replace_color(node, type, hex, tohex)
+      replaceColor(node, type, hex, tohex)
     }
   })
 }
 
-function replace(msg: BaseMsg) {
+function replace(msg: BaseMsg): void {
   finded(msg.find.hex, msg.replace.hex, msg.find.type)
 }
 
