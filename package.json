@@ -1,14 +1,22 @@
 {
-  "name": "color-replace",
+  "name": "figma-color-replace",
   "version": "1.0.0",
   "description": "Quickly replace color in Frame.",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/203x/figma-color-replace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/203x/figma-color-replace/issues"
+  },
+  "homepage": "https://www.figma.com/c/plugin/797668496099411237/Color-Replace",
+  "keywords": ["figma"],
+  "author": "203X",
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.2",

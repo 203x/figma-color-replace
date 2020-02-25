@@ -6,7 +6,6 @@ import html from '@rollup/plugin-html'
 import postcss from 'rollup-plugin-postcss'
 import svelte from 'rollup-plugin-svelte'
 import del from 'rollup-plugin-delete'
-const fs = require('fs')
 
 const production = !process.env.ROLLUP_WATCH
 
@@ -45,6 +44,7 @@ const ui = {
     commonjs(),
     html({
       fileName: 'ui.html',
+      // eslint-disable-next-line no-unused-vars
       template: ({ attributes, bundle, files, publicPath, title }) => {
         let css = []
         let js = []
