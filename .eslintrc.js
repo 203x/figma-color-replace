@@ -41,4 +41,5 @@ module.exports = {
     semi: ['warn', 'never'],
     // 'no-unused-vars': ['warn', 'local'],
   },
+  ignorePatterns: ['dist/']
 }

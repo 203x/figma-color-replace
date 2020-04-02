@@ -1,5 +1,15 @@
 <script>
   export let color
+
+  let val = '#' + color
+
+  const handleChange = () => {
+    color = val.substring(1)
+  }
+
+  $: if (color) {
+    val = '#' + color
+  }
 </script>
 
 <style>
@@ -12,4 +22,4 @@
   }
 </style>
 
-<span class="color" style="background-color: #{color};" />
+<input class="color" type="color" bind:value={val} on:change={handleChange} />

@@ -17,9 +17,7 @@ const code = {
     name: 'code',
     sourcemap: !production,
   },
-  plugins: [
-    typescript({ removeComments: production })
-  ],
+  plugins: [typescript({ removeComments: production })],
 }
 
 const ui = {
@@ -51,13 +49,13 @@ const ui = {
         for (const key in files) {
           const typeFile = files[key]
           if (key === 'css') {
-            typeFile.forEach(file => {
+            typeFile.forEach((file) => {
               if (file.isAsset) {
                 css.push(file.source)
               }
             })
           } else if (key === 'js') {
-            typeFile.forEach(file => {
+            typeFile.forEach((file) => {
               if (file.isEntry) {
                 js.push(file.code)
               }
@@ -72,10 +70,11 @@ const ui = {
         )}</script>\n<style>${css.join('\n')}</style>`
       },
     }),
-    production && del({
-      targets: ['dist/*.bundle.js', 'dist/*.bundle.css', 'dist/*.map'],
-      hook: 'writeBundle'
-    })
+    production &&
+      del({
+        targets: ['dist/*.bundle.js', 'dist/*.bundle.css', 'dist/*.map'],
+        hook: 'writeBundle',
+      }),
   ],
 }
 

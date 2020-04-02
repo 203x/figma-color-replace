@@ -1,26 +1,17 @@
 <script>
-  import { onMount, createEventDispatcher } from 'svelte'
+  import { onMount } from 'svelte'
   export let color
 
   let val = ''
   let self
 
-  onMount(() => {
+  $: if (color) {
     reset()
-  })
+  }
 
   const reset = () => {
     val = color
   }
-  // afterUpdate( () => {
-  //   hex_to = color
-  // })
-  // afterUpdate(async () => {
-  //   console.log('the component is about to update');
-  //   hex_to = color
-  //   await tick()
-  // 	console.log('the component just updated');
-  // })
 
   const handleChange = () => {
     const format = (str, char) => {
@@ -53,16 +44,9 @@
     }
   }
 
-  const dispatch = createEventDispatcher()
-
   const update = new_hex => {
+    color = new_hex
     val = new_hex
-    if (color !== new_hex) {
-      color = new_hex
-      dispatch('update', {
-        hex: new_hex,
-      })
-    }
   }
 </script>
 

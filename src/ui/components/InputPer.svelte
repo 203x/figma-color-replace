@@ -1,13 +1,14 @@
 <script>
-  import { onMount, createEventDispatcher } from 'svelte'
+  import { onMount } from 'svelte'
 
   export let opacity
 
   let val = 100
   let self
-  onMount(() => {
+
+  $: if (opacity) {
     reset()
-  })
+  }
 
   const reset = () => {
     val = opacity.toFixed(4) * 100 + '%'
@@ -27,14 +28,8 @@
     }
   }
 
-  const dispatch = createEventDispatcher()
-
   const update = (real, new_opa) => {
     opacity = real
-    val = new_opa
-    dispatch('update', {
-      opacity: real,
-    })
   }
 </script>
 

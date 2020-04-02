@@ -8,7 +8,8 @@
   import { config_fold } from '../stores'
   export let color
   export let opacity
-  // export let visible;
+
+  // import { debounce, throttle } from '../util/func'
 
   const { getType } = getContext('type')
   const type = getType()
@@ -22,8 +23,11 @@
 
   const update = ({ detail }) => {
     let pluginMessage = {}
-    // console.log(detail)
+    console.log(detail)
     if (detail.hex) {
+      if (hex !== detail.hex) {
+        hex = detail.hex
+      }
       pluginMessage = {
         type: 'replace',
         config: {
@@ -59,6 +63,30 @@
     }
     parent.postMessage({ pluginMessage }, '*')
   }
+
+  const update_hex = hex => {
+    const pluginMessage = {
+      type: 'replace',
+      config: {
+        type: $config_fold.type,
+        opacity: $config_fold.opacity,
+      },
+      find: {
+        type: type,
+        hex: $config_fold.opacity
+          ? rgba2hex({ ...color, a: opacity })
+          : rgb2hex(color),
+      },
+      replace: {
+        hex: hex,
+      },
+    }
+    parent.postMessage({ pluginMessage }, '*')
+  }
+
+  $: if (hex) {
+    update_hex(hex)
+  }
 </script>
 
 <style>
@@ -85,9 +113,9 @@
 {#if hex}
   <div class="show inner">
     <ColorBlock bind:color={hex} />
-    <InputHex bind:color={hex} on:update={update} />
+    <InputHex bind:color={hex} />
     {#if $config_fold.opacity}
-      <InputPer bind:opacity={opa} on:update={update} />
+      <InputPer bind:opacity={opa} />
     {/if}
   </div>
 {/if}
