@@ -1,11 +1,11 @@
-import resolve from '@rollup/plugin-node-resolve'
-
 import commonjs from '@rollup/plugin-commonjs'
-import typescript from '@rollup/plugin-typescript'
 import html from '@rollup/plugin-html'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import typescript from '@rollup/plugin-typescript'
+import del from 'rollup-plugin-delete'
 import postcss from 'rollup-plugin-postcss'
 import svelte from 'rollup-plugin-svelte'
-import del from 'rollup-plugin-delete'
+
 
 const production = !process.env.ROLLUP_WATCH
 
@@ -34,11 +34,7 @@ const ui = {
       emitCss: true,
     }),
     postcss({ extract: true, minimize: production }),
-    resolve({
-      customResolveOptions: {
-        moduleDirectory: 'node_modules',
-      },
-    }),
+    nodeResolve(),
     commonjs(),
     html({
       fileName: 'ui.html',
@@ -50,7 +46,7 @@ const ui = {
           const typeFile = files[key]
           if (key === 'css') {
             typeFile.forEach((file) => {
-              if (file.isAsset) {
+              if (file.type === 'asset') {
                 css.push(file.source)
               }
             })
