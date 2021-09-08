@@ -37,6 +37,8 @@
   input {
     width: 5em;
     padding-left: 5px;
+    background-color: #fff;
+    color: #999
   }
 </style>
 
