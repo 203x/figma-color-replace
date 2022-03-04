@@ -19,6 +19,7 @@
     height: 1.5em;
     border-radius: 1px;
     background-color: #fff;
+    box-shadow: rgb(0 0 0 / 10%) 0px 0px 0px 1px inset;
   }
 </style>
 
