@@ -16,7 +16,7 @@ You can install it through the Figma App [here](https://www.figma.com/c/plugin/7
 
 ## Development
 ```
-Rollup
+Vite
 |- UI: Svelte + Sass
 |- Main: Typescript
 ```
