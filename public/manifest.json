@@ -2,7 +2,7 @@
   "name": "Color Replace",
   "id": "797668496099411237",
   "api": "1.0.0",
-  "main": "dist/main.js",
-  "ui": "dist/ui.html",
+  "main": "code.js",
+  "ui": "ui.html",
   "editorType": ["figma"]
 }

@@ -1,26 +1,34 @@
-<script>
-  export let color
+<script lang="ts">
+  export let color: string
+  export let lightness: boolean = false
 
-  let val = '#' + color
+  let val: string = '#' + color
+
+  $: val = '#' + color
 
   const handleChange = () => {
     color = val.substring(1)
   }
-
-  $: if (color) {
-    val = '#' + color
-  }
 </script>
 
-<style>
+<input
+  class="color"
+  class:lightness
+  type="color"
+  bind:value={val}
+  on:change={handleChange}
+/>
+
+<style lang="scss">
   .color {
     display: block;
     width: 1.5em;
     height: 1.5em;
     border-radius: 1px;
     background-color: #fff;
-    box-shadow: rgb(0 0 0 / 10%) 0px 0px 0px 1px inset;
+    border: none;
+    &.lightness {
+      border: 0.5px solid rgb(0 0 0 / 10%);
+    }
   }
 </style>
-
-<input class="color" type="color" bind:value={val} on:change={handleChange} />

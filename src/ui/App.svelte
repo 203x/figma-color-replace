@@ -1,45 +1,59 @@
-<script>
-  import { colors, config_fold } from './stores'
-  import Results from './components/Results.svelte'
-  import Switch from './components/modal/Switch.svelte'
+<script lang="ts">
+  import { colors, config_fold } from './stores/index'
+  import PaintPanel from './components/PaintPanel.svelte'
+  import Toggle from './components/modal/Toggle.svelte'
+  // let styleTagDefinitions = document.getElementById("figma-style").innerHTML
 </script>
-
-<style>
-  .main {
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-  .switch-set {
-    display: flex;
-    align-items: center;
-  }
-  .switch-set > span {
-    display: block;
-    margin-left: 6px;
-  }
-</style>
 
 <div class="main">
   <div class="panel inner no-select">
     <div class="inner switch-set">
-      <Switch bind:checked={$config_fold.type} />
-      <span>Type</span>
+      <div class="name">Type</div>
+      <button
+        class="value"
+        on:click={() => ($config_fold.type = !$config_fold.type)}
+      >
+        <Toggle checked={$config_fold.type} />
+      </button>
     </div>
     <div class="inner switch-set">
-      <Switch bind:checked={$config_fold.opacity} />
-      <span>Opacity</span>
+      <div class="name">Opacity</div>
+      <button
+        class="value"
+        on:click={() => ($config_fold.opacity = !$config_fold.opacity)}
+      >
+        <Toggle checked={$config_fold.opacity} />
+      </button>
     </div>
   </div>
 
   {#if $config_fold.type}
-    <Results colors={$colors.fills} typename="fills">fill</Results>
-    <Results colors={$colors.strokes} typename="strokes">stroke</Results>
-    <Results colors={$colors.effects} typename="effects">effects</Results>
+    <PaintPanel type="fills" colors={$colors.fills} />
+    <PaintPanel type="strokes" colors={$colors.strokes} />
+    <PaintPanel type="effects" colors={$colors.effects} />
   {:else}
-    <Results
-      colors={[...$colors.effects, ...$colors.strokes, ...$colors.fills]}
-      typename="all">
-      All
-    </Results>
+    <PaintPanel
+      type="all"
+      colors={[...$colors.fills, ...$colors.strokes, ...$colors.effects]}
+    />
   {/if}
 </div>
+
+<style lang="scss">
+  .main {
+    // margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .switch-set {
+    display: flex;
+    min-height: 30px;
+    .name {
+      color: var(--figma-color-text-secondary, rgba(0, 0, 0, 0.8));
+      line-height: 30px;
+      width: 40%;
+    }
+    .value {
+      width: 60%;
+    }
+  }
+</style>

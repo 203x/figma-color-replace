@@ -1,20 +1,15 @@
-<script>
-  import { onMount } from 'svelte'
-  export let color
+<script lang="ts">
+  export let color: string
 
   let val = ''
-  let self
+  let self: HTMLInputElement
 
-  $: if (color) {
-    reset()
-  }
-
-  const reset = () => {
+  $: {
     val = color
   }
 
   const handleChange = () => {
-    const format = (str, char) => {
+    const format = (str: string, char: string): string => {
       return str.replace(/(\d)/g, (m, n) => char.charAt(parseInt(n)))
     }
     const hexm = /[a-fA-F0-9]+/.exec(val)
@@ -40,22 +35,15 @@
           break
       }
     } else {
-      reset()
+      val = color
     }
   }
 
-  const update = new_hex => {
+  const update = (new_hex: string) => {
     color = new_hex
     val = new_hex
   }
 </script>
-
-<style>
-  input {
-    text-transform: uppercase;
-    width: 6em;
-  }
-</style>
 
 <input
   class="inner"
@@ -65,6 +53,14 @@
   bind:value={val}
   bind:this={self}
   on:change={handleChange}
-  on:focus={() => {
+  on:focusin={() => {
     self.select()
-  }} />
+  }}
+/>
+
+<style>
+  input {
+    text-transform: uppercase;
+    width: 6em;
+  }
+</style>

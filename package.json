@@ -1,11 +1,16 @@
 {
   "name": "figma-color-replace",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Quickly replace color in Frame.",
-  "main": "dist/main.js",
+  "main": "dist/code.js",
+  "type": "module",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "vite",
+    "build:code": "vite build --config vite.code.config.ts",
+    "build:html": "vite build",
+    "build": "pnpm build:html && pnpm build:code",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -21,24 +26,16 @@
   "author": "203X",
   "license": "MIT",
   "devDependencies": {
-    "@figma/plugin-typings": "^1.42.1",
-    "@rollup/plugin-commonjs": "^21.0.2",
-    "@rollup/plugin-html": "^0.2.4",
-    "@rollup/plugin-node-resolve": "^13.1.3",
-    "@rollup/plugin-typescript": "^8.3.1",
-    "@typescript-eslint/eslint-plugin": "^5.13.0",
-    "@typescript-eslint/parser": "^5.13.0",
-    "eslint": "^8.10.0",
-    "eslint-config-prettier": "^8.5.0",
-    "node-sass": "^7.0.1",
-    "postcss": "^8.4.7",
-    "prettier": "^2.5.1",
-    "rollup": "^2.69.0",
-    "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-postcss": "^4.0.2",
-    "rollup-plugin-svelte": "^7.1.0",
-    "svelte": "^3.46.4",
-    "tslib": "^2.3.1",
-    "typescript": "^4.6.2"
+    "@figma/plugin-typings": "^1.60.0",
+    "@sveltejs/vite-plugin-svelte": "^2.0.3",
+    "@tsconfig/svelte": "^3.0.0",
+    "sass": "^1.58.3",
+    "svelte": "^3.55.1",
+    "svelte-check": "^3.0.4",
+    "tslib": "^2.5.0",
+    "typescript": "^4.9.5",
+    "vite": "^4.1.4",
+    "vite-plugin-html-inline": "^0.1.6",
+    "vite-plugin-inspect": "^0.7.15"
   }
 }

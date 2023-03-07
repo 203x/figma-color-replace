@@ -25,6 +25,8 @@ Rollup
 or
 ```npm run build```
 
+### Link
+https://www.figma.com/plugin-docs/api/api-reference
 
 ## License
 [MIT](./LICENSE)

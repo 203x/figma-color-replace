@@ -1,10 +1,9 @@
 @charset 'utf-8';
 
-@import 'normalize';
+// @import 'normalize';
+@import 'figma';
+@import 'global';
 
-* {
-  box-sizing: border-box;
-}
 .label {
   font-family: sans-serif;
 }
@@ -30,7 +29,7 @@ li {
 .panel {
   padding-top: 8px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--figma-color-border, #e5e5e5);
 }
 .no-select {
   cursor: default;
@@ -44,22 +43,4 @@ input {
 }
 input:focus {
   outline: none;
-}
-
-#app {
-  font: normal 400 11px/16px Inter, Roboto, sans-serif;
-  font-weight: 400;
-  color: #333;
-}
-
-input[type='color'] {
-  -webkit-appearance: none;
-  border: none;
-  padding: 0;
-}
-input[type='color']::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-input[type='color']::-webkit-color-swatch {
-  border: none;
 }

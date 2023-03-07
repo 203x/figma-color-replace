@@ -1,53 +1,51 @@
-import postBorders from './post'
-import replace from './action'
-
-interface BaseMsg {
-  type: 'replace'
-  config?: {
-    type: boolean
-    opacity: boolean
-  }
-  find: {
-    type: 'fills' | 'strokes' | 'effects' | 'all'
-    hex: string
-  }
-  replace: {
-    hex: string
-  }
-}
-
-// const config_fold = {
-//   opacity: false,
-//   type: true
-// }
-
-// figma.clientStorage.getAsync('config_fold').then(data=>{
-//   if (data) {
-//     figma.ui.postMessage({
-//       type: 'node-collect',
-//       data: data
-//     })
-//     console.log(data)
-//   }else {
-//     figma.clientStorage.setAsync('config_fold', config_fold).then(e=>{
-//       console.log('init', e)
-//     })
-//   }
-// })
+// import postBorders from './post'
+import { replace } from './action'
+import { sendMessage } from './send'
 
 figma.showUI(__html__, {
-  width: 180,
+  width: 200,
   height: 400,
+  themeColors: true,
 })
 
+/**
+ * 发送消息 给 UI HTML界面
+ */
+
+figma.skipInvisibleInstanceChildren = true
 figma.on('selectionchange', () => {
-  postBorders()
+  figma.ui.postMessage(sendMessage())
 })
 
-postBorders()
+figma.ui.postMessage(sendMessage())
 
-figma.ui.onmessage = (msg: BaseMsg): void => {
-  if (msg.type === 'replace') {
-    replace(msg)
+figma.clientStorage.getAsync('config').then((data) => {
+  if (data) {
+    figma.ui.postMessage({
+      type: 'config',
+      data: data,
+    })
+  } else {
+    figma.clientStorage.setAsync('config', {
+      opacity: false,
+      type: false,
+    })
+  }
+})
+
+/**
+ * 从 UI HTML界面 接收动作指令
+ */
+
+figma.ui.onmessage = (msg: ReceiveMessage): void => {
+  switch (msg?.type) {
+    case 'replace':
+      replace(msg)
+      break
+    case 'config':
+      figma.clientStorage.setAsync('config', msg.data)
+      break
+    default:
+      break
   }
 }

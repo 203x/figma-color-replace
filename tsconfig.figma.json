@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "ESNext",
+    // "module": "ESNext",
+    // "locale": "zh-CN",
+    // "esModuleInterop": true,
+    "typeRoots": ["./node_modules/@types", "./node_modules/@figma"],
+    "strict": true
+  },
+  "exclude": ["node_modules"],
+  "include": ["src/code", "src/util", "src/index.d.ts"]
+}

@@ -1,114 +1,149 @@
+import Color from '../util/color'
 import {
-  isSolidPaint,
-  isShadowEffect,
-  getAllNode,
-  rgb2hex,
-  rgba2hex,
-  hex2rgb,
   clone,
-} from './util/index'
-import postBorders from './post'
+  paintToColor,
+  effectToColor,
+  getAllNode,
+  hasColor,
+} from './helper'
 
-type ColorType = 'fills' | 'strokes' | 'effects'
-
-interface BaseMsg {
-  type: 'replace'
-  config?: {
-    type: boolean
-    opacity: boolean
-  }
-  find: {
-    type: ColorType | 'all'
-    hex: string
-  }
-  replace: {
-    hex: string
-  }
-}
-
-// type a = SolidPaint | ShadowEffect // Array<NodeColor>
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function findIndex(arr: any[], isTrue: (any) => boolean): number[] {
-  return arr.reduce((find: number[], val, idx: number) => {
-    if (isTrue(val)) {
-      return [...find, idx]
-    } else {
-      return find
-    }
-  }, [])
-}
-
-function replaceColor(
-  node: SceneNode,
-  type: ColorType,
-  hex: string,
-  tohex: string
-): void {
-  if (type in node && node[type] instanceof Array) {
-    let findindex: number[] = []
-    if (type === 'fills' || type === 'strokes') {
-      findindex = findIndex(node[type], paint => {
-        if (isSolidPaint(paint)) {
-          let paintHex = ''
-          if (hex.length === 8) {
-            paintHex = rgba2hex({
-              ...paint.color,
-              a: paint.opacity,
-            })
-          } else if (hex.length === 6) {
-            paintHex = rgb2hex(paint.color)
-          }
-          return paintHex === hex
-        }
-        return false
-      })
-    } else if (type === 'effects') {
-      findindex = findIndex(node[type], effect => {
-        if (isShadowEffect(effect)) {
-          let paintHex = ''
-          if (hex.length === 8) {
-            paintHex = rgba2hex(effect.color)
-          } else if (hex.length === 6) {
-            paintHex = rgb2hex(effect.color)
-          }
-          return paintHex === hex
-        }
-        return false
+const changeColor = {
+  fills(node: SceneNode, callback: (paint: Paint) => Paint) {
+    if ('fills' in node && node.fills !== figma.mixed) {
+      const fills = clone(node.fills)
+      node.fills = fills.map((paint) => {
+        return callback(paint)
       })
     }
-    if (findindex.length > 0) {
-      const temp = clone(node[type])
-      const { r, g, b } = hex2rgb(tohex)
-      findindex.forEach(index => {
-        temp[index].color.r = r
-        temp[index].color.g = g
-        temp[index].color.b = b
+  },
+  strokes(node: SceneNode, callback: (paint: Paint) => Paint) {
+    if ('strokes' in node) {
+      const strokes = clone(node.strokes)
+      node.strokes = strokes.map((paint) => {
+        return callback(paint)
       })
-      node[type] = temp
-      postBorders()
     }
+  },
+  effects(node: SceneNode, callback: (effect: Effect) => Effect) {
+    if ('effects' in node) {
+      const effects = clone(node.effects)
+      node.effects = effects.map((effect) => {
+        return callback(effect)
+      })
+    }
+  },
+}
+
+function isFound(color: NodeColor | null, msg: ReceiveMessageReplace): boolean {
+  if (msg.search.hex === color?.hex) {
+    if (msg.search.opacity && msg.search.opacity === color.opacity) {
+      return true
+    } else if (!msg.search.opacity) {
+      return true
+    }
+  }
+  return false
+}
+
+function paintChangeColor(paint: any, msg: ReceiveMessageReplace): any {
+  const color = paintToColor(paint)
+  if (color) {
+    const targetColor = Color.fromHex(msg.replace.hex, msg.replace.opacity)
+    if (targetColor && color && msg.search.hex === color.hex) {
+      if (msg.search.opacity && msg.search.opacity === color.opacity) {
+        paint.color.r = targetColor.r
+        paint.color.g = targetColor.g
+        paint.color.b = targetColor.b
+        paint.opacity = targetColor.a
+      } else if (!msg.search.opacity) {
+        paint.color.r = targetColor.r
+        paint.color.g = targetColor.g
+        paint.color.b = targetColor.b
+      }
+    }
+    return paint
+  }
+  return paint
+}
+function effectChangeColor(effect: any, msg: ReceiveMessageReplace): any {
+  const color = effectToColor(effect)
+  if (color) {
+    const targetColor = Color.fromHex(msg.replace.hex, msg.replace.opacity)
+
+    if (targetColor && color && msg.search.hex === color.hex) {
+      if (msg.search.opacity && msg.search.opacity === color.opacity) {
+        effect.color.r = targetColor.r
+        effect.color.g = targetColor.g
+        effect.color.b = targetColor.b
+        effect.color.a = targetColor.a
+      } else if (!msg.search.opacity) {
+        effect.color.r = targetColor.r
+        effect.color.g = targetColor.g
+        effect.color.b = targetColor.b
+      }
+    }
+  }
+
+  return effect
+}
+
+const replaceMethod = {
+  fills(node: SceneNode, msg: ReceiveMessageReplace) {
+    if ('fills' in node && node.fills !== figma.mixed) {
+      if (node.fills.some((paint) => isFound(paintToColor(paint), msg))) {
+        changeColor.fills(node, (paint) => paintChangeColor(paint, msg))
+      }
+    }
+  },
+  strokes(node: SceneNode, msg: ReceiveMessageReplace) {
+    if ('strokes' in node) {
+      if (node.strokes.some((paint) => isFound(paintToColor(paint), msg))) {
+        changeColor.strokes(node, (paint) => paintChangeColor(paint, msg))
+      }
+    }
+  },
+  effects(node: SceneNode, msg: ReceiveMessageReplace) {
+    if ('effects' in node) {
+      if (node.effects.some((effect) => isFound(effectToColor(effect), msg))) {
+        changeColor.effects(node, (effect) => effectChangeColor(effect, msg))
+      }
+    }
+  },
+}
+
+function replace(msg: ReceiveMessageReplace): void {
+  switch (msg.search.type) {
+    case 'fills':
+      getAllNode(figma.currentPage.selection, (node) =>
+        hasColor.fills(node)
+      ).forEach((node) => {
+        replaceMethod.fills(node, msg)
+      })
+      break
+    case 'strokes':
+      getAllNode(figma.currentPage.selection, (node) =>
+        hasColor.strokes(node)
+      ).forEach((node) => {
+        replaceMethod.strokes(node, msg)
+      })
+      break
+    case 'effects':
+      getAllNode(figma.currentPage.selection, (node) =>
+        hasColor.effects(node)
+      ).forEach((node) => {
+        replaceMethod.effects(node, msg)
+      })
+      break
+    case 'all':
+      getAllNode(figma.currentPage.selection, (node) =>
+        hasColor.all(node)
+      ).forEach((node) => {
+        replaceMethod.fills(node, msg)
+        replaceMethod.strokes(node, msg)
+        replaceMethod.effects(node, msg)
+      })
+      break
   }
 }
 
-function finded(
-  hex: string,
-  tohex: string,
-  type: BaseMsg['find']['type']
-): void {
-  getAllNode().forEach(node => {
-    if (type === 'all') {
-      replaceColor(node, 'fills', hex, tohex)
-      replaceColor(node, 'strokes', hex, tohex)
-      replaceColor(node, 'effects', hex, tohex)
-    } else {
-      replaceColor(node, type, hex, tohex)
-    }
-  })
-}
-
-function replace(msg: BaseMsg): void {
-  finded(msg.find.hex, msg.replace.hex, msg.find.type)
-}
-
-export default replace
+export { replace }

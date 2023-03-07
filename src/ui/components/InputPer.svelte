@@ -1,55 +1,60 @@
-<script>
-  import { onMount } from 'svelte'
+<script lang="ts">
+  export let opacity: number
 
-  export let opacity
+  let val = '100%'
+  let self: HTMLInputElement
 
-  let val = 100
-  let self
-
-  $: if (opacity) {
-    reset()
+  $: {
+    val = toPer(float(opacity))
   }
 
-  const reset = () => {
-    val = opacity.toFixed(4) * 100 + '%'
+  function float(num_or_str: number | string): number {
+    // @ts-ignore
+    const t = Number.parseFloat(num_or_str)
+    if (Number.isNaN(t)) {
+      return 0
+    } else {
+      return t
+    }
+  }
+
+  function toPer(num: number): string {
+    const t = num * 100
+    return float(t.toFixed(2)).toString() + '%'
   }
 
   const handleChange = () => {
-    let num = parseFloat(val)
+    let num = Number.parseFloat(val)
     if (Number.isNaN(num)) {
-      reset()
+      val = toPer(float(opacity) / 100)
     } else {
       if (num > 100) {
         num = 100
       } else if (num <= 0) {
         num = 0
       }
-      update(num, num + '%')
+      opacity = num / 100
     }
-  }
-
-  const update = (real, new_opa) => {
-    opacity = real
   }
 </script>
 
-<style>
-  input {
-    width: 4em;
-    padding-left: 5px;
-    background-color: #fff;
-    color: #999
-  }
-</style>
-
 <input
   maxlength="6"
-  minlength="2"
+  minlength="1"
   type="text"
   disabled
   bind:value={val}
   bind:this={self}
   on:change={handleChange}
-  on:focus={() => {
+  on:focusin={() => {
     self.select()
-  }} />
+  }}
+/>
+
+<style>
+  input {
+    width: 4em;
+    padding-left: 5px;
+    background-color: transparent;
+  }
+</style>
